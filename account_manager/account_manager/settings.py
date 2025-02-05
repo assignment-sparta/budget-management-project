@@ -38,7 +38,7 @@ THIRD_PARTY_APPS = [
 ]
 
 # 마이 앱
-MY_APPS = [    
+LOCAL_APPS = [    
     'account',
     'budget',
     'expense',
