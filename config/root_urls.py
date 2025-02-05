@@ -13,7 +13,6 @@ urlpatterns = [
 ]
 
 swagger_urlpatterns = [
-    # swagger
     path("swagger.json/", SpectacularJSONAPIView.as_view(), name="schema-json"),
     path("swagger.yaml/", SpectacularYAMLAPIView.as_view(), name="swagger-yaml"),
     path("swagger/", SpectacularSwaggerView.as_view(url_name="schema-json"), name="swagger-ui"),

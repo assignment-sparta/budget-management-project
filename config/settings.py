@@ -2,17 +2,10 @@ from pathlib import Path
 from datetime import timedelta
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -20,7 +13,6 @@ ALLOWED_HOSTS = []
 # ------------------------------------------------------------------------------
 # 애플리케이션 설정 (Application Settings)
 # ------------------------------------------------------------------------------
-# 장고 기본앱
 DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -30,18 +22,16 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-# 서드파티 앱
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
-    "drf_spectacular",  # drf-spectacular을 사용하여 API 문서를 자동으로 생성하기 위해 추가함
+    "drf_spectacular",
 ]
 
-# 로컬 앱
 LOCAL_APPS = [
-    "account",
-    "budget",
-    "expense",
+    "budget_management_project.account",
+    "budget_management_project.budget",
+    "budget_management_project.expense",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -57,7 +47,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "config.urls"
+ROOT_URLCONF = "config.root_urls"
+
+APPEND_SLASH = False
 
 TEMPLATES = [
     {
@@ -77,10 +69,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# ------------------------------------------------------------------------------
+# 데이터베이스 설정 (Database Settings)
+# ------------------------------------------------------------------------------
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -93,8 +84,35 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+# ------------------------------------------------------------------------------
+# 국제화 설정 (Internationalization Settings)
+# ------------------------------------------------------------------------------
+LANGUAGE_CODE = "ko-kr"
+
+TIME_ZONE = "Asia/seoul"
+
+USE_I18N = True
+
+USE_TZ = True
+
+
+# ------------------------------------------------------------------------------
+# 정적 파일 설정 (Static Files Settings)
+# ------------------------------------------------------------------------------
+STATIC_URL = "static/"
+
+STATIC_ROOT = BASE_DIR / "static"
+
+MEDIA_URL = "/media/"
+
+MEDIA_ROOT = BASE_DIR / "media"
+
+# ------------------------------------------------------------------------------
+# Django 기타 설정 (Django Miscellaneous Settings)
+# ------------------------------------------------------------------------------
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "account.User"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -112,66 +130,34 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
-LANGUAGE_CODE = "ko-kr"
-TIME_ZONE = "Asia/seoul"
-USE_I18N = True
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "static"
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# 유저모델 설정
-AUTH_USER_MODEL = "account.User"
-
-
+# ------------------------------------------------------------------------------
+# REST Framework 설정 (REST Framework Settings)
+# ------------------------------------------------------------------------------
 REST_FRAMEWORK = {
-    # 모든 API에 인증을 필수로 하는 전역 설정
-    # API뷰에 인증된 사용자만 접근이 가능한 설정
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-    # API 인증 방식을 JWT으로 사용하기로 설정
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",  # JWT
     ),
-    # DRF 기본 스키마 클래스를 drf-spectacular의 AutoSchema로 설정
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
-# 토큰 재사용 방지 JWT 설정
+
+# ------------------------------------------------------------------------------
+# JWT 설정 (JWT Settings)
+# ------------------------------------------------------------------------------
 SIMPLE_JWT = {
-    # Access Token의 유효 기간 설정
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    # Access Token의 유효 기간 설정
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    # Refresh Token 사용 시 새 토큰 발급 여부 설정
     "ROTATE_REFRESH_TOKENS": True,
-    # 새 Refresh Token 발급 시 기존 Token을 블랙리스트에 등록
-    "BLACKLIST_AFTER_ROTATION": True,
+    "BLACKLIST_AFTER_ROTATION": False,
 }
 
 
-# 캐시 처리 고려
-
-
-# Spectacular 세팅
+# ------------------------------------------------------------------------------
+# Spectacular 설정 (Spectacular Settings)
+# ------------------------------------------------------------------------------
 SPECTACULAR_SETTINGS = {
-    # General schema metadata. Refer to spec for valid inputs
-    # https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.3.md#openapi-object
-    "TITLE": "drf-spectacular API Document",  # API 문서 이름
+    "TITLE": "drf-spectacular API Document",
     "DESCRIPTION": "drf-specatular 를 사용해서 만든 API 문서입니다.",
     "SWAGGER_UI_SETTINGS": {
         "dom_id": "#swagger-ui",
