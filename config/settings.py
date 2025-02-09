@@ -5,7 +5,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-print(SECRET_KEY)
+
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -32,6 +32,7 @@ LOCAL_APPS = [
     "budget_management_project.account",
     "budget_management_project.budget",
     "budget_management_project.expense",
+    "budget_management_project.commons",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
