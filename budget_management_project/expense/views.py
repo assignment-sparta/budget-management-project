@@ -8,7 +8,7 @@ from datetime import date
 from .serializers import ExpenseSerializer
 import calendar
 from rest_framework.decorators import api_view
-from .models import Expense, 
+from .models import Expense
 from expense.enums import CategoryType
 
 # Create your views here.

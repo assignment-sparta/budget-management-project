@@ -1,6 +1,6 @@
-import enum
+from commons.enums import CustomEnum
 
-class CategoryType(enum.Enum):
+class CategoryType(CustomEnum):
     ETC = (1, '기타')
     TUITION_FEE = (2, '학비')
     BOOK_FEE = (3, '교재비')
@@ -14,7 +14,3 @@ class CategoryType(enum.Enum):
     PREPARATION_FEE = (11, '개인 물품비')
     DORMITORY_FEE = (12, '기숙사비')
     HEALTHCARE_FEE = (13, '건강 비용')
-
-    def __init__(self, code, description):
-        self.code = code
-        self.description = description
