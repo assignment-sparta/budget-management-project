@@ -13,6 +13,7 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/v1/account", include("account.urls")), # 사용자 계정 URL
 ]
 
 
