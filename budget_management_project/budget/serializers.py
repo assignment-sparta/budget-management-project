@@ -3,14 +3,13 @@ from .models import Budget
 from budget_management_project.expense.models import Category
 
 
-class BudgetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Budget
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta():
+        model = Category
         fields = '__all__'
         
 
-class CategorySerializer(serializers.ModelSerializer):
-    
-    class Meta():
-        model = Category
+class BudgetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Budget
         fields = '__all__'
