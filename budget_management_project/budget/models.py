@@ -1,28 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from budget_management_project.expense.models import Category
 
 User = get_user_model()
-
-CATEGORY_TYPES = [
-    ('ETC', '기타'),
-    ('FOOD', '식비'),
-    ('TRANSPORT', '교통'),
-    ('HOUSING', '주거'),
-    ('INSURANCE', '보험'),
-    ('LOAN', '대출'),
-    ('MEDICAL', '건강 및 의료'),
-    ('EDUCATION', '자기계발'),
-    ('HOBBY', '취미'),
-    ('EMERGENCY', '비상금'),
-]
-
-class Category(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    type = models.CharField(max_length=50, choices=CATEGORY_TYPES, default='ETC')
-    description = models.CharField(max_length=50, null=True, blank=True)
-    
-    class Meta:
-        db_table = 'category'
 
 
 class Budget(models.Model):
@@ -37,4 +17,3 @@ class Budget(models.Model):
     
     class Meta:
         db_table = 'budget'
-        
