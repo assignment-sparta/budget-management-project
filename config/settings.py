@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -82,7 +83,7 @@ DATABASES = {
         "PORT": os.getenv('DB_PORT'),
     }
 }
-
+print(DATABASES)
 
 # ------------------------------------------------------------------------------
 # 국제화 설정 (Internationalization Settings)
