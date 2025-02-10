@@ -83,7 +83,7 @@ DATABASES = {
         "PORT": os.getenv('DB_PORT'),
     }
 }
-print(DATABASES)
+
 
 # ------------------------------------------------------------------------------
 # 국제화 설정 (Internationalization Settings)
