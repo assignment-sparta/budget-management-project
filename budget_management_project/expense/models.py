@@ -15,10 +15,10 @@ class Expense(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     expense_money = models.PositiveIntegerField(default=0)
-    expense_date = models.DateField(auto_now_add=True) #임시로 DateField 설정
+    expense_date = models.DateField(auto_now_add=True) 
     memo = models.TextField(null=True, blank=True) 
     created_at = models.DateField(auto_now_add=True)
-    updated_at = models.DateField(auto_now=True) #임시로 DateField 설정
+    updated_at = models.DateField(auto_now=True) 
 
     class Meta:
         db_table = "expense"

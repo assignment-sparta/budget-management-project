@@ -92,28 +92,3 @@ class CustomEnum(enum.Enum):
         if isinstance(other, CustomEnum):
             return self.code == other.code
         return NotImplemented
-
-# # ✅ 사용 예시 - Color Enum 정의
-# class Color(CustomEnum):
-#     RED = (1, "빨강")
-#     BLUE = (2, "파랑")
-#     GREEN = (3, "초록")
-#     YELLOW = (4, "노랑")
-
-# # ✅ 테스트 코드
-# print(Color.from_code(1))  # 1: 빨강
-# print(Color.from_description("파랑"))  # 2: 파랑
-# print(Color.random_member())  # 랜덤한 색상 출력
-# print(Color.next_member(3))  # 초록 → 노랑
-# print(Color.previous_member(1))  # 빨강 → 노랑 (순환됨)
-# print(Color.json())  # JSON 형식 출력: {"1": "빨강", "2": "파랑", "3": "초록", "4": "노랑"}
-# print(Color.by_index(2))  # 초록
-# print(Color.length())  # 4
-# print(Color.items())  # [('RED', 1, '빨강'), ('BLUE', 2, '파랑'), ('GREEN', 3, '초록'), ('YELLOW', 4, '노랑')]
-# print(Color.reverse_lookup("초록"))  # 3: 초록
-# print(Color.reverse_lookup(2))  # 2: 파랑
-
-# # ✅ == 연산 지원
-# print(Color.RED == 1)       # True
-# print(Color.RED == Color.RED) # True
-# print(Color.RED == Color.BLUE) # False
