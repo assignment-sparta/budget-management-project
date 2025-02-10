@@ -49,12 +49,11 @@ class BudgetView(APIView):
         '''
         예산 설정
         '''
-        user = request.user
         data = request.data
         
         serializer = BudgetSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=request.user)
             return Response({
                 "message": "예산 설정 성공",
                 "data": serializer.data
