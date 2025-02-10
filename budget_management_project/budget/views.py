@@ -10,12 +10,10 @@ from budget.models import Budget
 from budget.serializers import CategorySerializer, BudgetSerializer
 
 
-
-'''
-카테고리 관관 APIView
-'''
 class CategoryView(APIView):
-    
+    '''
+    카테고리 관련 APIView
+    '''
     permission_classes = [IsAuthenticated] 
     
     def get(self, request):
@@ -27,17 +25,17 @@ class CategoryView(APIView):
         }, status=status.HTTP_200_OK)
 
 
-'''
-예산 설정 APIView
-'''
+
 class BudgetView(APIView):
-   
+    '''
+    예산 설정 APIView
+    '''
     permission_classes = [IsAuthenticated]
     
-    '''
-    예산 목록 조회
-    '''
     def get(self, request):
+        '''
+        예산 목록 조회
+        '''
         budgets = Budget.objects.filter(user=request.user)
         serializer = BudgetSerializer(budgets, many=True)
         return Response({
@@ -46,10 +44,11 @@ class BudgetView(APIView):
         }, status=status.HTTP_200_OK)
 
 
-    '''
-    예산 설정
-    '''
+ 
     def post(self, request):
+        '''
+        예산 설정
+        '''
         user = request.user
         data = request.data
         

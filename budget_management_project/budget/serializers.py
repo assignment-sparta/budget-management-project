@@ -7,7 +7,7 @@ from budget_management_project.expense.models import Category
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ['id', 'name', 'description']
         
 
 class BudgetSerializer(serializers.ModelSerializer):
