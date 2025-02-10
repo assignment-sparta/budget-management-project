@@ -10,9 +10,6 @@ class Category(models.Model):
 
     class Meta:
         db_table = "category"
-    
-    def __str__(self):
-        return self.name
 
 class Expense(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -29,6 +26,3 @@ class Expense(models.Model):
         indexes = [
             models.Index(fields=['-expense_date', '-created_at'], name='expense_date_created_idx'),
         ]
-
-    def __str__(self):
-        return f"{self.user.username}의 지출: {self.expense_money}원 ({self.expense_date})"
