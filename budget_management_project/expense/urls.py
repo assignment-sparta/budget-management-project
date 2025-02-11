@@ -1,6 +1,10 @@
 from django.urls import path
-from . import views
+
+from expense.views import ExpenseCreateView, ExpenseUpdateView
 
 app_name = "expense"
 
-urlpatterns = []
+urlpatterns = [
+    path('api/v1/expenses', ExpenseCreateView.as_view(), name='expense-create'),
+    path('api/v1/expenses/<int:pk>', ExpenseUpdateView.as_view(), name='expense-update'),
+]
