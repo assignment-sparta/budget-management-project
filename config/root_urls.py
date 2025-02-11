@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -13,7 +13,7 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/v1/account", include("account.urls")), # 사용자 계정 URL
+    path("api/v1/", include("budget_management_project.account.urls")), # 사용자 계정 URL
 ]
 
 
