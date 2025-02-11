@@ -1,12 +1,16 @@
 from django.utils import timezone
+from django.utils.timezone import now
+from django.core.validators import MaxValueValidator
 from rest_framework import serializers
 
 from expense.models import Expense
 
 class ExpenseSerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(source='category.name', read_only=True)
+    category_name = serializers.CharField(source='category.name')
     formatted_money = serializers.SerializerMethodField()
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    expense_money = serializers.IntegerField(min_value=1)
+    expense_date = serializers.DateTimeField(validators=[MaxValueValidator(limit_value=now)])
 
     class Meta:
         model = Expense
@@ -21,17 +25,12 @@ class ExpenseSerializer(serializers.ModelSerializer):
             'memo',
             'created_at'
         ]
-        read_only_fields = ['id', 'created_at']
-
-    def validate_expense_money(self, value):
-        if value <= 0:
-            raise serializers.ValidationError("지출 금액은 0보다 커야 합니다.")
-        return value
-    
-    def validate_expense_date(self, value):
-        if value > timezone.now().date():
-            raise serializers.ValidationError("미래 날짜로 지출을 등록할 수 없습니다.")
-        return value
+        read_only_fields = [
+            'id',
+            'created_at',
+            'category_name',
+            'formatted_money'
+        ]
 
     def get_formatted_money(self, obj):
         return f"{obj.expense_money:,}원"
