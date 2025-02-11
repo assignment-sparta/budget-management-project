@@ -1,6 +1,9 @@
 from django.urls import path
-from . import views
+from budget import views
 
 app_name = "budget"
 
-urlpatterns = []
+urlpatterns = [
+    path('categories', views.CategoryView.as_view(), name='category'),
+    path('budgets', views.BudgetView.as_view(), name='budget-setting'),
+]
