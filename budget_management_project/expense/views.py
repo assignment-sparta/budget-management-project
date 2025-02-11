@@ -14,7 +14,6 @@ class ExpenseCreateView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        
         return Response({
             'message': '지출이 성공적으로 생성되었습니다.',
             'data': serializer.data
@@ -24,3 +23,4 @@ class ExpenseCreateView(generics.CreateAPIView):
 class ExpenseUpdateView(generics.UpdateAPIView):
     serializer_class = ExpenseSerializer
     permission_classes = [IsExpenseOwner]
+    lookup_url_kwarg = 'expense_id'
