@@ -9,12 +9,12 @@ User = get_user_model()
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())],  # 이메일 중복 검증
+        validators=[UniqueValidator(queryset=User.objects.all())],
     )
     password = serializers.CharField(
         write_only=True,
         required=True,
-        validators=[validate_password],  # Django 기본 비밀번호 검증
+        validators=[validate_password],
     )
     password2 = serializers.CharField(
         write_only=True,
