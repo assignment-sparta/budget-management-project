@@ -33,6 +33,7 @@ LOCAL_APPS = [
     "budget_management_project.account",
     "budget_management_project.budget",
     "budget_management_project.expense",
+    "budget_management_project.commons",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -83,7 +84,6 @@ DATABASES = {
         "PORT": os.getenv('DB_PORT'),
     }
 }
-
 
 # ------------------------------------------------------------------------------
 # 국제화 설정 (Internationalization Settings)

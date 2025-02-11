@@ -23,4 +23,3 @@ class ExpenseCreateView(generics.CreateAPIView):
 class ExpenseUpdateView(generics.UpdateAPIView):
     serializer_class = ExpenseSerializer
     permission_classes = [IsExpenseOwner]
-    lookup_url_kwarg = 'expense_id'
