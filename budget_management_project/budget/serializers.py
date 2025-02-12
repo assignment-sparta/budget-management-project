@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from budget.models import Budget
+from budget_management_project.budget.models import Budget
 from budget_management_project.expense.models import Category
 
 
