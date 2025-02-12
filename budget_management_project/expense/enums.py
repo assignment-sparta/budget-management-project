@@ -1,4 +1,4 @@
-from commons.enums import CustomEnum
+from budget_management_project.commons.enums import CustomEnum
 
 class CategoryType(CustomEnum):
     ETC = (1, '기타')
