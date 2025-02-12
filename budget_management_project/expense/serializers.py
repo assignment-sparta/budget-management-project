@@ -1,7 +1,6 @@
 from django.utils.timezone import now
 from django.core.validators import MaxValueValidator
 from rest_framework import serializers
-
 from budget_management_project.expense.models import Expense
 
 class ExpenseSerializer(serializers.ModelSerializer):
