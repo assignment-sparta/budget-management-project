@@ -14,6 +14,7 @@ from drf_spectacular.views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/", include("budget_management_project.account.urls")), # 사용자 계정 URL
+    path('api/v1/', include('budget_management_project.expense.urls')),
 ]
 
 
