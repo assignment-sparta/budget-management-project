@@ -2,10 +2,10 @@ from django.db import transaction
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from budget_management_project.expense.models import Category
-from budget_management_project.budget.serializers import CategorySerializer
+from budget_management_project.expense.serializers import CategorySerializer
 from budget_management_project.expense.serializers import ExpenseSerializer
 from budget_management_project.expense.permissions import IsExpenseOwner
 
@@ -14,7 +14,7 @@ class CategoryView(APIView):
     '''
     카테고리 관련 APIView
     '''
-    permission_classes = [IsAuthenticated] 
+    permission_classes = [AllowAny] 
     
     def get(self, request):
         categories = Category.objects.all()
