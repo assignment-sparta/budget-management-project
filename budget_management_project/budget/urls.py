@@ -5,4 +5,5 @@ app_name = "budget"
 
 urlpatterns = [
     path('budgets', views.BudgetView.as_view(), name='budget-setting'),
+    path('budgets/<int:budget_id>', views.BudgetDetailView.as_view(), name='budget-detail'),
 ]
