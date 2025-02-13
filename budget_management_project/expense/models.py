@@ -24,6 +24,7 @@ class Expense(models.Model):
     memo = models.TextField(null=True, blank=True) 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_excluded = models.BooleanField(default=False)
 
     class Meta:
         db_table = "expense"

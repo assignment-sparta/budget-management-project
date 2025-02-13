@@ -1,7 +1,8 @@
-from django.utils import timezone
-from django.utils.timezone import now
+from datetime import date
+
 from django.core.validators import MaxValueValidator
 from rest_framework import serializers
+
 from budget_management_project.expense.models import Category, Expense
 
 
@@ -16,7 +17,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
     formatted_money = serializers.SerializerMethodField()
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     expense_money = serializers.IntegerField(min_value=1)
-    expense_date = serializers.DateTimeField(validators=[MaxValueValidator(limit_value=now)])
+    expense_date = serializers.DateField(validators=[MaxValueValidator(limit_value=date.today)])
 
     class Meta:
         model = Expense
