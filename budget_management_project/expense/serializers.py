@@ -1,7 +1,15 @@
+from django.utils import timezone
 from django.utils.timezone import now
 from django.core.validators import MaxValueValidator
 from rest_framework import serializers
-from budget_management_project.expense.models import Expense
+from budget_management_project.expense.models import Category, Expense
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'type', 'description']
+
 
 class ExpenseSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name')
@@ -21,8 +29,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
             'formatted_money',
             'expense_date',
             'memo',
-            'created_at',
-            'is_excluded'
+            'created_at'
         ]
         read_only_fields = [
             'id',

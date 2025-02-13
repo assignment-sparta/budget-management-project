@@ -1,15 +1,20 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from budget_management_project.expense.enums import CategoryType
 
 User = get_user_model()
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    type = models.PositiveIntegerField(
+        choices=[(name.code, name.description) for name in CategoryType],
+        unique=True
+    )
     description = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
         db_table = "category"
+
 
 class Expense(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

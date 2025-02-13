@@ -1,14 +1,6 @@
 from rest_framework import serializers
 from budget_management_project.budget.models import Budget
-from budget_management_project.expense.models import Category
 
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ['id', 'name', 'description']
-        
 
 class BudgetSerializer(serializers.ModelSerializer):
     class Meta:
