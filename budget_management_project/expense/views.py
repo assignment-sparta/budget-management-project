@@ -10,9 +10,6 @@ from budget_management_project.expense.permissions import IsExpenseOwner
 
 
 class CategoryView(APIView):
-    '''
-    카테고리 관련 APIView
-    '''
     permission_classes = [IsAuthenticated]
     
     def get(self, request):
