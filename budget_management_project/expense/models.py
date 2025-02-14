@@ -14,6 +14,9 @@ class Category(models.Model):
 
     class Meta:
         db_table = "category"
+    
+    def __str__(self):
+        return CategoryType.from_code(self.type).description
 
 
 class Expense(models.Model):
