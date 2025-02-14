@@ -15,7 +15,7 @@ class CategoryView(generics.ListAPIView):
 
     def get_queryset(self):
         for category_type in CategoryType:
-            Category.objects.get_or_create(type=category_type.code)
+            Category.objects.get_or_create(type=category_type.code, description=category_type.description)
         return super().get_queryset()
 
 
