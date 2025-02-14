@@ -13,10 +13,12 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/v1/", include("budget_management_project.account.urls")),
-    path("api/v1/", include("budget_management_project.budget.urls")),
-    path("api/v1/", include("budget_management_project.expense.urls")), 
-    ]
+    path("api/v1/", include([
+        path("", include("budget_management_project.account.urls")),
+        path("", include("budget_management_project.budget.urls")),
+        path("", include("budget_management_project.expense.urls")),
+        ])),
+]
 
 
 
