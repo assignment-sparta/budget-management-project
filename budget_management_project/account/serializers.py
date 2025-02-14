@@ -44,20 +44,3 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
     
-
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
-    
-    def validate(self, data):
-        user = authenticate(**data)
-        if user:
-            refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)
-            return {
-                'refresh': str(refresh),
-                'access': access_token
-            }
-        raise serializers.ValidationError(
-            {"오류": "일치하는 유저 정보가 없습니다."}
-        )
