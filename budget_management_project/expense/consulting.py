@@ -76,26 +76,21 @@ def calculate_and_generate_budget_report(user, serializer, today=None):
 
 def calculate_and_generate_new_budget_report(user, serializer, today=None):
     expense_objs = Expense.objects.filter(user=user, expense_date=today)
-    old_amount = expense_objs.expense_money
-    old_category = expense_objs.category
+    old_amount = sum(expense_objs.values_list('expense_money', flat=True))  
+    old_categories = expense_objs.values_list('category', flat=True) 
     
     serializer.save()
     new_amount = serializer.validated_data['expense_money']
     new_category = serializer.validated_data['category']
-    
-    if old_category == new_category:
+
+    for old_category in set(old_categories):
         Budget.objects.filter(user=user, category=old_category, budget_date=today).update(
-            budget_amount=F('budget_amount') + old_amount - new_amount
+            budget_amount=F('budget_amount') - old_amount
         )
-    else:
-        Budget.objects.filter(user=user, category=old_category, budget_date=today).update(
-            budget_amount=F('budget_amount') + old_amount
-        )
-        Budget.objects.filter(user=user, category=new_category, budget_date=today).update(
-            budget_amount=F('budget_amount') - new_amount
-        )
-    if today is None:
-        today = datetime.date.today()
+
+    Budget.objects.filter(user=user, category=new_category, budget_date=today).update(
+        budget_amount=F('budget_amount') + new_amount
+    )
 
     budget_objs = Budget.objects.filter(user=user, budget_date=today)
     expense_objs = Expense.objects.filter(user=user, expense_date=today)
@@ -119,7 +114,6 @@ def calculate_and_generate_new_budget_report(user, serializer, today=None):
     remaining_days = max(1, month_days - today.day)
 
     category_names = {category.type: category.description for category in Category.objects.all()}
-
     daily_budget_message = "오늘 사용 가능한 수정된 금액은 총 {}원 이며,\n".format(sum(budget_data.values()) // remaining_days)
     daily_budget_message += "각 수정된 하루 사용 가능 금액:\n"
     remain_responses = ""
@@ -133,8 +127,11 @@ def calculate_and_generate_new_budget_report(user, serializer, today=None):
 
         daily_budget_message += f"- {category_name}: {daily_category_budget}원\n"
         budget_data[category_id] -= daily_category_expense
+
+        budget = Budget.objects.get(user=user, category_id=category_id, budget_date=today)
         budget.budget_amount = budget_data[category_id] - daily_category_expense
         budget.save()
+        
         if daily_category_budget > daily_category_expense:
             remain_percentage = ((daily_category_budget - daily_category_expense) / daily_category_budget) * 100
             remain_responses += f"오늘 수정된 돈을 보니 {category_name} 절약을 잘 하셨어요! 절약률: {remain_percentage:.2f}%\n"
@@ -147,14 +144,14 @@ def calculate_and_generate_new_budget_report(user, serializer, today=None):
             warnings += f"수정된 값에서 {category_name} 예산이 위험 수준이에요!\n"
         else:
             warnings += f"수정된 값에서 {category_name} 예산이 적당한 수준에 있어요!\n"
-            
-        return Response({
-            'message': '지출이 성공적으로 수정되었습니다.',
-            'data': serializer.data,
-            'budget_report': {
-                'daily_budget_message': daily_budget_message,
-                'remain_responses': remain_responses,
-                'excessive_responses': excessive_responses,
-                'warnings': warnings,
-            }
-        }, status=status.HTTP_200_OK)
+
+    return Response({
+        'message': '지출이 성공적으로 수정되었습니다.',
+        'data': serializer.data,
+        'budget_report': {
+            'daily_budget_message': daily_budget_message,
+            'remain_responses': remain_responses,
+            'excessive_responses': excessive_responses,
+            'warnings': warnings,
+        }
+    }, status=status.HTTP_200_OK)
