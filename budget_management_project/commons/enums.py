@@ -1,6 +1,7 @@
 import enum
 import random
 import json
+from commons.enums import CustomEnum
 
 class CustomEnum(enum.Enum):
     def __init__(self, code, description):
@@ -92,3 +93,16 @@ class CustomEnum(enum.Enum):
         if isinstance(other, CustomEnum):
             return self.code == other.code
         return NotImplemented
+
+class CategoryType(CustomEnum):
+    FOOD = (1, "음식")
+    TRANSPORT = (2, "교통비")
+    ENTERTAINMENT = (3, "여가")
+    EDUCATION = (4, "교육")
+    HEALTH = (5, "건강")
+    OTHERS = (6, "기타")
+
+    @classmethod
+    def get_category_name(cls, code):
+        category = cls.from_code(code)
+        return category.description
