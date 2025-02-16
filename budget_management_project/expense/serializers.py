@@ -40,3 +40,25 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
     def get_formatted_money(self, obj):
         return f"{obj.expense_money:,}원"
+
+
+class LastMonthComparisonSerializer(serializers.Serializer):
+    category = serializers.CharField(source='category__description')
+    percentage = serializers.IntegerField()
+
+
+class LastWeekdayComparisonSerializer(serializers.Serializer):
+    weekday = serializers.CharField()
+    comparison_rate = serializers.IntegerField()
+
+
+class OtherUsersComparisonSerializer(serializers.Serializer):
+    other_users_rate = serializers.FloatField()
+    my_usage_rate = serializers.FloatField()
+    average_usage_rate = serializers.FloatField()
+
+
+class ExpenseStatisticsSerializer(serializers.Serializer):
+    last_month_comparison = LastMonthComparisonSerializer(many=True)
+    last_weekday_comparison = LastWeekdayComparisonSerializer()
+    other_users_comparison = OtherUsersComparisonSerializer()
