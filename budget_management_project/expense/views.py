@@ -7,7 +7,6 @@ from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.db import transaction
 from rest_framework.views import APIView
 
 from budget_management_project.expense.models import Expense
