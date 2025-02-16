@@ -13,17 +13,15 @@ from budget_management_project.expense.permissions import IsExpenseOwner
 from budget_management_project.budget.models import Budget
 from budget_management_project.expense.models import Expense, Category
 
-
-class CategoryView(APIView):
+class CategoryView(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated]
-    
-    def get(self, request):
-        categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
-        return Response({
-            "message": "카테고리 목록 조회 성공",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        for category_type in CategoryType:
+            Category.objects.get_or_create(type=category_type.code, description=category_type.description)
+        return super().get_queryset()
 
 
 class BaseExpenseView(generics.GenericAPIView):
