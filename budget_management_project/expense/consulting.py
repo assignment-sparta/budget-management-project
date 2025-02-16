@@ -75,25 +75,28 @@ def calculate_and_generate_budget_report(user, serializer, today=None):
 
 
 def calculate_and_generate_new_budget_report(user, serializer, today=None):
+    if today is None:
+        today = datetime.date.today()
+
     expense_objs = Expense.objects.filter(user=user, expense_date=today)
-    old_amount = sum(expense_objs.values_list('expense_money', flat=True))  
-    old_categories = expense_objs.values_list('category', flat=True) 
-    
+    old_amounts = expense_objs.values_list('expense_money', flat=True)
+    old_categories = expense_objs.values_list('category', flat=True)
+
     serializer.save()
     new_amount = serializer.validated_data['expense_money']
     new_category = serializer.validated_data['category']
 
-    for old_category in set(old_categories):
-        Budget.objects.filter(user=user, category=old_category, budget_date=today).update(
-            budget_amount=F('budget_amount') - old_amount
-        )
-
-    Budget.objects.filter(user=user, category=new_category, budget_date=today).update(
-        budget_amount=F('budget_amount') + new_amount
-    )
+    for old_category, old_amount in zip(old_categories, old_amounts):
+        if old_category == new_category:
+            Budget.objects.filter(user=user, category=old_category, budget_date=today).update(
+                budget_amount=F('budget_amount') - (old_amount - new_amount)
+            )
+        else:
+            Budget.objects.filter(user=user, category=new_category, budget_date=today).update(
+                budget_amount=F('budget_amount') + new_amount
+            )
 
     budget_objs = Budget.objects.filter(user=user, budget_date=today)
-    expense_objs = Expense.objects.filter(user=user, expense_date=today)
     if not budget_objs.exists():
         return None, "오늘의 예산 설정부터 해주세요!"
 
