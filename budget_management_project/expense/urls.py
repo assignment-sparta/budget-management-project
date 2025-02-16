@@ -6,4 +6,5 @@ urlpatterns = [
     path('expenses', views.ExpenseCreateView.as_view(), name='expense-create'),
     path('expenses/<int:expense_id>', views.ExpenseDetailView.as_view(), name='expense-detail'),
     path('expenses/<int:expense_id>/exclude', views.ExpenseExcludeView.as_view(), name='expense-exclude'),
+    path('expenses/statistics', views.ExpenseStatisticsView.as_view(), name='expense-statistics'),
 ]
