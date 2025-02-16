@@ -98,7 +98,7 @@ def calculate_and_generate_new_budget_report(user, serializer, today=None):
 
     budget_objs = Budget.objects.filter(user=user, budget_date=today)
     if not budget_objs.exists():
-        return None, "오늘의 예산 설정부터 해주세요!"
+        return None, "오늘의 예산 설정부터 해주세요!!"
 
     budget_data = defaultdict(int)
     expense_data = defaultdict(int)
