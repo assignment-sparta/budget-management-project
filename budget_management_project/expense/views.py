@@ -1,12 +1,17 @@
-from django.db import transaction
 from rest_framework import generics, status
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.db import transaction
+from rest_framework.views import APIView
+import datetime
 
+from budget_management_project.expense.models import Expense
+from budget_management_project.expense.consulting import calculate_and_generate_budget_report, calculate_and_generate_new_budget_report
 from budget_management_project.expense.models import Category, Expense
 from budget_management_project.expense.serializers import CategorySerializer, ExpenseSerializer
 from budget_management_project.expense.permissions import IsExpenseOwner
-from budget_management_project.expense.enums import CategoryType
+from budget_management_project.budget.models import Budget
+from budget_management_project.expense.models import Expense, Category
 
 class CategoryView(generics.ListAPIView):
     queryset = Category.objects.all()
@@ -39,14 +44,12 @@ class ExpenseCreateView(BaseExpenseView, generics.ListCreateAPIView):
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
+        user = request.user
+        today = datetime.date.today()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({
-            'message': '지출이 성공적으로 생성되었습니다.',
-            'data': serializer.data
-        }, status=status.HTTP_201_CREATED)
-
+        calculate_and_generate_budget_report(user, serializer, today)
 
 class ExpenseDetailView(BaseExpenseView, generics.RetrieveUpdateDestroyAPIView):
     def retrieve(self, request, *args, **kwargs):
@@ -61,12 +64,10 @@ class ExpenseDetailView(BaseExpenseView, generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({
-            'message': '지출이 성공적으로 수정되었습니다.',
-            'data': serializer.data
-        }, status=status.HTTP_200_OK)
-
+        today = datetime.date.today()
+        user = request.user
+        calculate_and_generate_new_budget_report(user, today)
+        
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.delete()

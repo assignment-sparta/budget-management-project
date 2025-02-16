@@ -13,10 +13,10 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(source='category.name')
+    category_name = serializers.CharField(source='category.description', read_only=True)
     formatted_money = serializers.SerializerMethodField()
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    expense_money = serializers.IntegerField(min_value=1)
+    expense_money = serializers.IntegerField(min_value=1, write_only=True)
     expense_date = serializers.DateField(validators=[MaxValueValidator(limit_value=date.today)])
 
     class Meta:
@@ -29,7 +29,6 @@ class ExpenseSerializer(serializers.ModelSerializer):
             'expense_money',
             'formatted_money',
             'expense_date',
-            'memo',
             'created_at'
         ]
         read_only_fields = [
