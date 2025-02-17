@@ -11,6 +11,8 @@ def calculate_and_generate_budget_report(user):
     today = datetime.date.today()
 
     latest_budget = Budget.objects.filter(user=user, budget_date=today).order_by('-id').first()
+    if latest_budget:
+        return None, "오늘은 이미 이 카테고리에 관해 값을 넣었습니다!"
     if not latest_budget:
         return None, "오늘의 예산 설정부터 해주세요!"
 
