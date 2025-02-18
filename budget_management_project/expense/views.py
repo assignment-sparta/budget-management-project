@@ -1,5 +1,5 @@
 from datetime import timedelta
-
+import datetime
 from dateutil.relativedelta import relativedelta
 from django.db import transaction, models
 from django.db.models import Sum
@@ -13,6 +13,7 @@ from budget_management_project.expense.models import Category, Expense
 from budget_management_project.expense.serializers import CategorySerializer, ExpenseSerializer, ExpenseStatisticsSerializer
 from budget_management_project.expense.permissions import IsExpenseOwner
 from budget_management_project.expense.enums import CategoryType
+from budget_management_project.expense.consulting import calculate_and_generate_budget_report, calculate_and_generate_new_budget_report
 
 class CategoryView(generics.ListAPIView):
     queryset = Category.objects.all()
@@ -49,8 +50,22 @@ class ExpenseCreateView(BaseExpenseView, generics.ListCreateAPIView):
         today = datetime.date.today()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        calculate_and_generate_budget_report(user, serializer, today)
+        remain_responses, excessive_responses, warnings = calculate_and_generate_budget_report(user, serializer, today)
+        if remain_responses is not None:
+            return Response({
+                'message': '지출이 성공적으로 생성되었습니다.',
+                'data': serializer.data,
+                'budget_report': {
+                    'remain_responses': remain_responses,
+                    'excessive_responses': excessive_responses,
+                    'warnings': warnings,
+                }
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response({
+                "message" : excessive_responses
+            })
+
 
 class ExpenseDetailView(BaseExpenseView, generics.RetrieveUpdateDestroyAPIView):
     def retrieve(self, request, *args, **kwargs):
@@ -67,7 +82,17 @@ class ExpenseDetailView(BaseExpenseView, generics.RetrieveUpdateDestroyAPIView):
         serializer.is_valid(raise_exception=True)
         today = datetime.date.today()
         user = request.user
-        calculate_and_generate_new_budget_report(user, today)
+        daily_budget_message, remain_responses, excessive_responses, warnings = calculate_and_generate_new_budget_report(user, today)
+        return Response({
+            'message': '지출이 성공적으로 수정되었습니다.',
+            'data': serializer.data,
+            'budget_report': {
+                'daily_budget_message': daily_budget_message,
+                'remain_responses': remain_responses,
+                'excessive_responses': excessive_responses,
+                'warnings': warnings,
+            }
+        }, status=status.HTTP_200_OK)
         
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
